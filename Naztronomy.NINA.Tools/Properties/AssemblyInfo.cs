@@ -55,9 +55,9 @@ using System.Runtime.InteropServices;
 // [Optional] An in-depth description of the plugin.
 [assembly: AssemblyMetadata("LongDescription", @"Naztronomy Tools is a collection of utilities for N.I.N.A.
 
-**Discord - Custom Image Message** sequence trigger: on a configurable interval (every X seconds), posts a message to a Discord channel via a webhook and embeds an image from a URL (for example a Dropbox share link). Dropbox share links are automatically converted to direct image links.
+**Discord - Custom Image Message** sequence trigger: on a configurable interval (seconds, minutes or hours), posts a message to a Discord channel via a webhook and embeds an image from a URL (for example a Dropbox share link). Dropbox share links are automatically converted to direct image links, and the trigger shows a live countdown to the next post.
 
-The plugin options page provides default values for the Discord webhook URL, the image URL and the message, which are used to seed new trigger instances.")]
+Configure the webhook URL, image URL, message and optional embed styling (bot name, title, footer, color) on the plugin's Discord options tab. The webhook and image URLs are encrypted at rest.")]
 
 // Setting ComVisible to false makes the types in this assembly not visible to COM components.
 [assembly: ComVisible(false)]

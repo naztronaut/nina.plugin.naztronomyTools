@@ -25,7 +25,7 @@
                         <TextBlock
                             Margin="0,0,0,10"
                             TextWrapping="Wrap"
-                            Text="These values are used as the defaults for new 'Discord - Custom Image Message' triggers. A Dropbox share link will be converted to a direct image link automatically." />
+                            Text="The 'Discord - Custom Image Message' sequence trigger posts these values to Discord on its interval. A Dropbox share link is converted to a direct image link automatically." />
 
                         <TextBlock Margin="0,5,0,2" Text="Discord Webhook URL" />
                         <TextBox
@@ -39,6 +39,13 @@
                             HorizontalAlignment="Left"
                             Text="{Binding DiscordImageUrl, UpdateSourceTrigger=LostFocus}" />
 
+                        <CheckBox
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Left"
+                            Content="Bypass image cache (append timestamp)"
+                            ToolTip="Adds a changing parameter to the image URL so Discord fetches a fresh copy each time. Enable for frequently-updated images such as all-sky cameras."
+                            IsChecked="{Binding DiscordBypassImageCache}" />
+
                         <TextBlock Margin="0,10,0,2" Text="Message" />
                         <TextBox
                             MinWidth="400"
@@ -49,12 +56,73 @@
                             VerticalScrollBarVisibility="Auto"
                             Text="{Binding DiscordMessage, UpdateSourceTrigger=LostFocus}" />
 
+                        <TextBlock
+                            Margin="0,20,0,5"
+                            FontWeight="Bold"
+                            Text="Embed (optional)" />
+
+                        <TextBlock Margin="0,5,0,2" Text="Bot Name" />
+                        <TextBox
+                            MinWidth="400"
+                            HorizontalAlignment="Left"
+                            ToolTip="Overrides the name the webhook posts under. Leave blank to use the webhook default."
+                            Text="{Binding DiscordUsername, UpdateSourceTrigger=LostFocus}" />
+
+                        <TextBlock Margin="0,10,0,2" Text="Title" />
+                        <TextBox
+                            MinWidth="400"
+                            HorizontalAlignment="Left"
+                            Text="{Binding DiscordEmbedTitle, UpdateSourceTrigger=LostFocus}" />
+
+                        <TextBlock Margin="0,10,0,2" Text="Footer" />
+                        <TextBox
+                            MinWidth="400"
+                            HorizontalAlignment="Left"
+                            Text="{Binding DiscordEmbedFooter, UpdateSourceTrigger=LostFocus}" />
+
+                        <TextBlock Margin="0,10,0,2" Text="Color (#RRGGBB)" />
+                        <TextBox
+                            MinWidth="120"
+                            HorizontalAlignment="Left"
+                            ToolTip="Accent color of the embed's left edge, e.g. #2E86DE."
+                            Text="{Binding DiscordEmbedColor, UpdateSourceTrigger=LostFocus}" />
+
                         <Button
                             Margin="0,15,0,0"
                             Padding="10,3"
                             HorizontalAlignment="Left"
                             Content="Send test message"
                             Command="{Binding SendTestDiscordMessageCommand}" />
+
+                    </StackPanel>
+                </TabItem>
+
+                <TabItem Header="Target Scheduler">
+                    <StackPanel Orientation="Vertical" Margin="10">
+
+                        <TextBlock
+                            Margin="0,0,0,5"
+                            FontWeight="Bold"
+                            Text="Scheduler Preview" />
+
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            TextWrapping="Wrap"
+                            Text="The 'Discord - Scheduler Preview' instruction reads the plan preview from the Target Scheduler plugin's HTTP API. You must enable the API in Target Scheduler's settings (it is off by default). The message is posted using the webhook configured on the Discord tab." />
+
+                        <TextBlock Margin="0,5,0,2" Text="API host" />
+                        <TextBox
+                            MinWidth="200"
+                            HorizontalAlignment="Left"
+                            ToolTip="Usually localhost when NINA and Target Scheduler run on the same machine."
+                            Text="{Binding TargetSchedulerApiHost, UpdateSourceTrigger=LostFocus}" />
+
+                        <TextBlock Margin="0,10,0,2" Text="API port" />
+                        <TextBox
+                            MinWidth="120"
+                            HorizontalAlignment="Left"
+                            ToolTip="Must match the API port set in Target Scheduler (default 8188)."
+                            Text="{Binding TargetSchedulerApiPort, UpdateSourceTrigger=LostFocus}" />
 
                     </StackPanel>
                 </TabItem>

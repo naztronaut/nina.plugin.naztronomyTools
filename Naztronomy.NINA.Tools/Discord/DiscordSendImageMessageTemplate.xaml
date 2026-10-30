@@ -1,0 +1,33 @@
+<!--
+    Copyright (c) 2026 Naztronomy
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/
+-->
+<ResourceDictionary
+    x:Class="Naztronomy.NINA.Tools.Discord.DiscordSendImageMessageTemplate"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Naztronomy.NINA.Tools.Discord"
+    xmlns:mini="clr-namespace:NINA.View.Sequencer.MiniSequencer;assembly=NINA.Sequencer"
+    xmlns:nina="clr-namespace:NINA.View.Sequencer;assembly=NINA.Sequencer">
+
+    <DataTemplate DataType="{x:Type local:DiscordSendImageMessageInstruction}">
+        <nina:SequenceBlockView>
+            <nina:SequenceBlockView.SequenceItemContent>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontStyle="Italic"
+                    Text="Posts the Discord message from the plugin settings" />
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Naztronomy.NINA.Tools.Discord.DiscordSendImageMessageInstruction_Mini">
+        <mini:MiniSequenceItem>
+            <TextBlock VerticalAlignment="Center" Text="Discord - Send Image Message" />
+        </mini:MiniSequenceItem>
+    </DataTemplate>
+
+</ResourceDictionary>

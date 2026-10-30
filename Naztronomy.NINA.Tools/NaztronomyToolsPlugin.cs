@@ -65,6 +65,13 @@ namespace Naztronomy.NINA.Tools {
             RaisePropertyChanged(nameof(DiscordWebhookUrl));
             RaisePropertyChanged(nameof(DiscordImageUrl));
             RaisePropertyChanged(nameof(DiscordMessage));
+            RaisePropertyChanged(nameof(DiscordUsername));
+            RaisePropertyChanged(nameof(DiscordEmbedTitle));
+            RaisePropertyChanged(nameof(DiscordEmbedFooter));
+            RaisePropertyChanged(nameof(DiscordEmbedColor));
+            RaisePropertyChanged(nameof(DiscordBypassImageCache));
+            RaisePropertyChanged(nameof(TargetSchedulerApiHost));
+            RaisePropertyChanged(nameof(TargetSchedulerApiPort));
         }
 
         public string DiscordWebhookUrl {
@@ -91,12 +98,90 @@ namespace Naztronomy.NINA.Tools {
             }
         }
 
+        public string DiscordUsername {
+            get => pluginSettings.GetValueString(nameof(DiscordUsername), string.Empty);
+            set {
+                pluginSettings.SetValueString(nameof(DiscordUsername), value?.Trim() ?? string.Empty);
+                RaisePropertyChanged();
+            }
+        }
+
+        public string DiscordEmbedTitle {
+            get => pluginSettings.GetValueString(nameof(DiscordEmbedTitle), string.Empty);
+            set {
+                pluginSettings.SetValueString(nameof(DiscordEmbedTitle), value ?? string.Empty);
+                RaisePropertyChanged();
+            }
+        }
+
+        public string DiscordEmbedFooter {
+            get => pluginSettings.GetValueString(nameof(DiscordEmbedFooter), string.Empty);
+            set {
+                pluginSettings.SetValueString(nameof(DiscordEmbedFooter), value ?? string.Empty);
+                RaisePropertyChanged();
+            }
+        }
+
+        public string DiscordEmbedColor {
+            get => pluginSettings.GetValueString(nameof(DiscordEmbedColor), "#2E86DE");
+            set {
+                pluginSettings.SetValueString(nameof(DiscordEmbedColor), value?.Trim() ?? string.Empty);
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool DiscordBypassImageCache {
+            get => pluginSettings.GetValueBoolean(nameof(DiscordBypassImageCache), true);
+            set {
+                pluginSettings.SetValueBoolean(nameof(DiscordBypassImageCache), value);
+                RaisePropertyChanged();
+            }
+        }
+
+        public string TargetSchedulerApiHost {
+            get => pluginSettings.GetValueString(nameof(TargetSchedulerApiHost), "localhost");
+            set {
+                pluginSettings.SetValueString(nameof(TargetSchedulerApiHost), value?.Trim() ?? string.Empty);
+                RaisePropertyChanged();
+            }
+        }
+
+        public int TargetSchedulerApiPort {
+            get => pluginSettings.GetValueInt32(nameof(TargetSchedulerApiPort), 8188);
+            set {
+                pluginSettings.SetValueInt32(nameof(TargetSchedulerApiPort), value);
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// The id of the currently active NINA profile, used to query the Target Scheduler API.
+        /// </summary>
+        public string ActiveProfileId => profileService.ActiveProfile.Id.ToString();
+
+        /// <summary>
+        /// Builds a Discord message from the current plugin settings.
+        /// </summary>
+        public DiscordWebhookMessage BuildDiscordMessage() {
+            return new DiscordWebhookMessage {
+                WebhookUrl = DiscordWebhookUrl,
+                Username = DiscordUsername,
+                Content = DiscordMessage,
+                ImageUrl = DiscordImageUrl,
+                EmbedTitle = DiscordEmbedTitle,
+                EmbedFooter = DiscordEmbedFooter,
+                EmbedColor = DiscordWebhookMessage.ParseColor(DiscordEmbedColor),
+                IncludeTimestamp = true,
+                BustImageCache = DiscordBypassImageCache,
+            };
+        }
+
         public ICommand SendTestDiscordMessageCommand { get; }
 
         private async Task SendTestDiscordMessageAsync() {
             try {
-                await DiscordWebhookSender.SendAsync(DiscordWebhookUrl, DiscordMessage, DiscordImageUrl, CancellationToken.None);
-                // Notification.ShowSuccess("Naztronomy Tools: Discord test message sent");
+                await DiscordWebhookSender.SendAsync(BuildDiscordMessage(), CancellationToken.None);
+                Notification.ShowSuccess("Naztronomy Tools: Discord test message sent");
             } catch (Exception ex) {
                 Logger.Error($"Naztronomy Tools: failed to send Discord test message: {ex}");
                 Notification.ShowExternalError($"Failed to send Discord message:{Environment.NewLine}{ex.Message}", "Naztronomy Tools");

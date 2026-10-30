@@ -34,4 +34,9 @@
           ContinueOnError="true" />
   </Target>
 
+  <!-- Builds the distributable .zip + NINA manifest.json via Package-Plugin.ps1. Run: dotnet msbuild -t:PackagePlugin -->
+  <Target Name="PackagePlugin">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\Package-Plugin.ps1&quot; -Configuration $(Configuration)" />
+  </Target>
+
 </Project>

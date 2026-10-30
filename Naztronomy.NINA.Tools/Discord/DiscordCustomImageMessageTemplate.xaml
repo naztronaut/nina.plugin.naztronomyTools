@@ -19,11 +19,21 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Text="Every" />
                     <TextBox
-                        MinWidth="60"
+                        MinWidth="55"
                         Margin="5,0,0,0"
                         VerticalAlignment="Center"
-                        Text="{Binding IntervalSeconds, UpdateSourceTrigger=LostFocus}" />
-                    <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" Text="seconds" />
+                        Text="{Binding Interval, UpdateSourceTrigger=LostFocus}" />
+                    <ComboBox
+                        MinWidth="90"
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center"
+                        ItemsSource="{Binding IntervalUnits}"
+                        SelectedItem="{Binding Unit}" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Margin="12,0,0,0"
+                        FontStyle="Italic"
+                        Text="{Binding CountdownText}" />
                 </StackPanel>
             </nina:SequenceBlockView.SequenceItemContent>
         </nina:SequenceBlockView>
@@ -34,8 +44,8 @@
             <mini:MiniTrigger.TriggerProgressContent>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Text="Discord image message every " />
-                    <TextBlock VerticalAlignment="Center" Text="{Binding IntervalSeconds}" />
-                    <TextBlock VerticalAlignment="Center" Text="s" />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding IntervalSummary}" />
+                    <TextBlock VerticalAlignment="Center" Margin="8,0,0,0" Text="{Binding CountdownText}" />
                 </StackPanel>
             </mini:MiniTrigger.TriggerProgressContent>
         </mini:MiniTrigger>
