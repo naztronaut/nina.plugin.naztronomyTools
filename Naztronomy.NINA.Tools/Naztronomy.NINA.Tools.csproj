@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Naztronomy.NINA.Tools</RootNamespace>
+    <AssemblyName>Naztronomy.NINA.Tools</AssemblyName>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Platforms>AnyCPU</Platforms>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NINA.Plugin" Version="3.2.0.9001" />
+  </ItemGroup>
+
+  <!--
+    Copies the built plugin into NINA's plugin folder after each build so it is
+    picked up the next time NINA starts. Only runs when NINA's local data folder
+    exists, and never fails the build if the copy cannot be completed.
+  -->
+  <Target Name="DeployToNina" AfterTargets="PostBuildEvent" Condition="Exists('$(LOCALAPPDATA)\NINA')">
+    <PropertyGroup>
+      <PluginDeployDir>$(LOCALAPPDATA)\NINA\Plugins\3.0.0\$(MSBuildProjectName)</PluginDeployDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(PluginDeployDir)" />
+    <Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb"
+          DestinationFolder="$(PluginDeployDir)"
+          SkipUnchangedFiles="false"
+          ContinueOnError="true" />
+  </Target>
+
+</Project>
