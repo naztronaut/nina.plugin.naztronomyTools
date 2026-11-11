@@ -10,8 +10,9 @@ A **sequence trigger** (found under the **Naztronomy Tools** category in the Adv
 
 - Configurable interval with **seconds / minutes / hours** units.
 - Live **countdown** to the next post shown on the trigger.
-- Posts a **message** and an **embedded image** from any direct image URL.
+- Posts a **message** and an **embedded image** from any direct image URL or a **local file path** (local files are uploaded straight to Discord).
 - **Dropbox share links are converted automatically** to direct image links (`?dl=0` → `?raw=1`), so you can paste a normal Dropbox link.
+- **Cache-busting** so Discord fetches a fresh image each time (ideal for all-sky cameras) — adds a changing URL parameter, or a unique filename for local files.
 - Optional embed styling: **bot name**, **title**, **footer**, **color**, and a UTC **timestamp**.
 - The webhook URL and image URL are **encrypted at rest** (Windows DPAPI, current user).
 

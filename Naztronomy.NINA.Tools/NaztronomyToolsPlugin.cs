@@ -12,6 +12,7 @@
 
 using Naztronomy.NINA.Tools.Discord;
 using Naztronomy.NINA.Tools.Utility;
+using Microsoft.Win32;
 using NINA.Core.Utility;
 using NINA.Core.Utility.Notification;
 using NINA.Plugin;
@@ -52,6 +53,7 @@ namespace Naztronomy.NINA.Tools {
             this.profileService.ProfileChanged += ProfileService_ProfileChanged;
 
             SendTestDiscordMessageCommand = new RelayCommand(_ => _ = SendTestDiscordMessageAsync());
+            BrowseImageFileCommand = new RelayCommand(_ => BrowseImageFile());
 
             Instance = this;
         }
@@ -177,6 +179,26 @@ namespace Naztronomy.NINA.Tools {
         }
 
         public ICommand SendTestDiscordMessageCommand { get; }
+
+        public ICommand BrowseImageFileCommand { get; }
+
+        private void BrowseImageFile() {
+            var dialog = new OpenFileDialog {
+                Title = "Select an image to send to Discord",
+                Filter = "Images|*.jpg;*.jpeg;*.png;*.gif;*.webp;*.bmp;*.tif;*.tiff|All files|*.*",
+                CheckFileExists = true,
+            };
+
+            var current = DiscordImageUrl;
+            if (!string.IsNullOrWhiteSpace(current) && System.IO.File.Exists(current)) {
+                dialog.InitialDirectory = System.IO.Path.GetDirectoryName(current);
+                dialog.FileName = System.IO.Path.GetFileName(current);
+            }
+
+            if (dialog.ShowDialog() == true) {
+                DiscordImageUrl = dialog.FileName;
+            }
+        }
 
         private async Task SendTestDiscordMessageAsync() {
             try {
