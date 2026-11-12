@@ -20,8 +20,10 @@ using NINA.Plugin.Interfaces;
 using NINA.Profile;
 using NINA.Profile.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +40,7 @@ namespace Naztronomy.NINA.Tools {
     public class NaztronomyToolsPlugin : PluginBase, INotifyPropertyChanged {
         private readonly PluginOptionsAccessor pluginSettings;
         private readonly IProfileService profileService;
+        private readonly LogMonitor.LogMonitorService logMonitor;
 
         /// <summary>
         /// A static handle to the loaded plugin so sequence items/triggers can read the
@@ -56,9 +59,15 @@ namespace Naztronomy.NINA.Tools {
             BrowseImageFileCommand = new RelayCommand(_ => BrowseImageFile());
 
             Instance = this;
+
+            logMonitor = new LogMonitor.LogMonitorService(this);
+            if (LogMonitorEnabled) {
+                logMonitor.Start();
+            }
         }
 
         public override Task Teardown() {
+            logMonitor?.Dispose();
             profileService.ProfileChanged -= ProfileService_ProfileChanged;
             return base.Teardown();
         }
@@ -74,6 +83,13 @@ namespace Naztronomy.NINA.Tools {
             RaisePropertyChanged(nameof(DiscordBypassImageCache));
             RaisePropertyChanged(nameof(TargetSchedulerApiHost));
             RaisePropertyChanged(nameof(TargetSchedulerApiPort));
+            RaisePropertyChanged(nameof(LogMonitorNotifyOnErrors));
+            RaisePropertyChanged(nameof(LogMonitorNotifyOnWarnings));
+            RaisePropertyChanged(nameof(LogMonitorKeywords));
+            RaisePropertyChanged(nameof(LogMonitorUsername));
+            RaisePropertyChanged(nameof(LogMonitorEmbedTitle));
+            RaisePropertyChanged(nameof(LogMonitorEnabled));
+            ApplyLogMonitorState();
         }
 
         public string DiscordWebhookUrl {
@@ -154,6 +170,74 @@ namespace Naztronomy.NINA.Tools {
                 pluginSettings.SetValueInt32(nameof(TargetSchedulerApiPort), value);
                 RaisePropertyChanged();
             }
+        }
+
+        public bool LogMonitorNotifyOnErrors {
+            get => pluginSettings.GetValueBoolean(nameof(LogMonitorNotifyOnErrors), true);
+            set {
+                pluginSettings.SetValueBoolean(nameof(LogMonitorNotifyOnErrors), value);
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool LogMonitorNotifyOnWarnings {
+            get => pluginSettings.GetValueBoolean(nameof(LogMonitorNotifyOnWarnings), false);
+            set {
+                pluginSettings.SetValueBoolean(nameof(LogMonitorNotifyOnWarnings), value);
+                RaisePropertyChanged();
+            }
+        }
+
+        public string LogMonitorKeywords {
+            get => pluginSettings.GetValueString(nameof(LogMonitorKeywords), string.Empty);
+            set {
+                pluginSettings.SetValueString(nameof(LogMonitorKeywords), value ?? string.Empty);
+                RaisePropertyChanged();
+            }
+        }
+
+        public string LogMonitorUsername {
+            get => pluginSettings.GetValueString(nameof(LogMonitorUsername), string.Empty);
+            set {
+                pluginSettings.SetValueString(nameof(LogMonitorUsername), value?.Trim() ?? string.Empty);
+                RaisePropertyChanged();
+            }
+        }
+
+        public string LogMonitorEmbedTitle {
+            get => pluginSettings.GetValueString(nameof(LogMonitorEmbedTitle), string.Empty);
+            set {
+                pluginSettings.SetValueString(nameof(LogMonitorEmbedTitle), value ?? string.Empty);
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool LogMonitorEnabled {
+            get => pluginSettings.GetValueBoolean(nameof(LogMonitorEnabled), false);
+            set {
+                pluginSettings.SetValueBoolean(nameof(LogMonitorEnabled), value);
+                RaisePropertyChanged();
+                ApplyLogMonitorState();
+            }
+        }
+
+        private void ApplyLogMonitorState() {
+            if (LogMonitorEnabled) {
+                logMonitor?.Start();
+            } else {
+                logMonitor?.Stop();
+            }
+        }
+
+        /// <summary>
+        /// The configured log-monitor phrases, one per line, with blanks removed.
+        /// </summary>
+        public IReadOnlyList<string> GetLogMonitorKeywords() {
+            return (LogMonitorKeywords ?? string.Empty)
+                .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(k => k.Trim())
+                .Where(k => k.Length > 0)
+                .ToList();
         }
 
         /// <summary>

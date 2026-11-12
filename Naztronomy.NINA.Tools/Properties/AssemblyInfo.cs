@@ -57,7 +57,9 @@ using System.Runtime.InteropServices;
 
 **Discord - Custom Image Message** sequence trigger: on a configurable interval (seconds, minutes or hours), posts a message to a Discord channel via a webhook and embeds an image from a URL (for example a Dropbox share link). Dropbox share links are automatically converted to direct image links, and the trigger shows a live countdown to the next post.
 
-Configure the webhook URL, image URL, message and optional embed styling (bot name, title, footer, color) on the plugin's Discord options tab. The webhook and image URLs are encrypted at rest.")]
+**Log Monitor**: a background monitor (toggled on the plugin's Logs tab) that watches NINA's latest log file and posts a Discord alert when it sees error, warning, or custom-phrase matches you configure. It runs independently of sequences and stays on across NINA restarts.
+
+Configure the shared Discord webhook URL on the plugin's Config options tab; it is encrypted at rest. Image and message styling live on the Discord tab.")]
 
 // Setting ComVisible to false makes the types in this assembly not visible to COM components.
 [assembly: ComVisible(false)]

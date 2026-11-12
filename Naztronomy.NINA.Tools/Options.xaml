@@ -14,28 +14,6 @@
         <StackPanel Orientation="Vertical" Margin="0,10,0,0">
             <TabControl MinHeight="300">
 
-                <TabItem Header="Config">
-                    <StackPanel Orientation="Vertical" Margin="10">
-
-                        <TextBlock
-                            Margin="0,0,0,5"
-                            FontWeight="Bold"
-                            Text="Notifications" />
-
-                        <TextBlock
-                            Margin="0,0,0,10"
-                            TextWrapping="Wrap"
-                            Text="These settings are shared by every Naztronomy Tools notification feature. The Discord webhook URL configured here is used by the Discord, Target Scheduler, and Log Monitor tools. It is encrypted at rest." />
-
-                        <TextBlock Margin="0,5,0,2" Text="Discord Webhook URL" />
-                        <TextBox
-                            MinWidth="400"
-                            HorizontalAlignment="Left"
-                            Text="{Binding DiscordWebhookUrl, UpdateSourceTrigger=LostFocus}" />
-
-                    </StackPanel>
-                </TabItem>
-
                 <TabItem Header="Discord">
                     <StackPanel Orientation="Vertical" Margin="10">
 
@@ -148,6 +126,108 @@
                             HorizontalAlignment="Left"
                             ToolTip="Must match the API port set in Target Scheduler (default 8188)."
                             Text="{Binding TargetSchedulerApiPort, UpdateSourceTrigger=LostFocus}" />
+
+                    </StackPanel>
+                </TabItem>
+
+                <TabItem Header="Logs">
+                    <StackPanel Orientation="Vertical" Margin="10">
+
+                        <TextBlock
+                            Margin="0,0,0,5"
+                            FontWeight="Bold"
+                            Text="Log Monitor" />
+
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            TextWrapping="Wrap"
+                            Text="Monitors NINA's latest log file and posts a Discord alert when it sees the items selected below. It runs on its own (no sequence required) and stays on across NINA restarts while the switch below is on. Set the webhook URL on the Config tab." />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <CheckBox
+                                VerticalAlignment="Center"
+                                IsChecked="{Binding LogMonitorEnabled}" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Margin="10,0,0,0"
+                                FontWeight="Bold"
+                                Text="Log monitor enabled" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <CheckBox
+                                VerticalAlignment="Center"
+                                IsChecked="{Binding LogMonitorNotifyOnErrors}" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Margin="10,0,0,0"
+                                Text="Notify on errors (ERROR and FATAL)" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                            <CheckBox
+                                VerticalAlignment="Center"
+                                ToolTip="Warnings can be frequent. Enable only if you want to be alerted to every warning."
+                                IsChecked="{Binding LogMonitorNotifyOnWarnings}" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Margin="10,0,0,0"
+                                Text="Notify on warnings (WARNING)" />
+                        </StackPanel>
+
+                        <TextBlock
+                            Margin="0,15,0,2"
+                            Text="Always notify on lines containing (one phrase per line)" />
+                        <TextBox
+                            MinWidth="400"
+                            MinHeight="80"
+                            HorizontalAlignment="Left"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            VerticalScrollBarVisibility="Auto"
+                            ToolTip="Case-insensitive. Any log line (of any level) containing one of these phrases raises an alert, e.g. 'filter wheel' or 'timed out'. Leave blank to rely only on the level checkboxes above."
+                            Text="{Binding LogMonitorKeywords, UpdateSourceTrigger=LostFocus}" />
+
+                        <TextBlock
+                            Margin="0,20,0,5"
+                            FontWeight="Bold"
+                            Text="Discord message" />
+
+                        <TextBlock Margin="0,5,0,2" Text="Bot Name" />
+                        <TextBox
+                            MinWidth="400"
+                            HorizontalAlignment="Left"
+                            ToolTip="Overrides the name the webhook posts under for log alerts. Leave blank to use the webhook default."
+                            Text="{Binding LogMonitorUsername, UpdateSourceTrigger=LostFocus}" />
+
+                        <TextBlock Margin="0,10,0,2" Text="Title" />
+                        <TextBox
+                            MinWidth="400"
+                            HorizontalAlignment="Left"
+                            ToolTip="The embed title for log alerts. Leave blank to use a default that reflects the severity."
+                            Text="{Binding LogMonitorEmbedTitle, UpdateSourceTrigger=LostFocus}" />
+
+                    </StackPanel>
+                </TabItem>
+
+                <TabItem Header="Config">
+                    <StackPanel Orientation="Vertical" Margin="10">
+
+                        <TextBlock
+                            Margin="0,0,0,5"
+                            FontWeight="Bold"
+                            Text="Notifications" />
+
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            TextWrapping="Wrap"
+                            Text="These settings are shared by every Naztronomy Tools notification feature. The Discord webhook URL configured here is used by the Discord, Target Scheduler, and Log Monitor tools. It is encrypted at rest." />
+
+                        <TextBlock Margin="0,5,0,2" Text="Discord Webhook URL" />
+                        <TextBox
+                            MinWidth="400"
+                            HorizontalAlignment="Left"
+                            Text="{Binding DiscordWebhookUrl, UpdateSourceTrigger=LostFocus}" />
 
                     </StackPanel>
                 </TabItem>
